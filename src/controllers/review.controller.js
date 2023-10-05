@@ -24,9 +24,6 @@ export const getAllReviews = async (req, res, next) => {
 export const addReview = async (req, res, next) => {
   const tourId = req?.params?.tourId;
 
-  console.log("req.user=>", req.user);
-
-  console.log("tour id=>", tourId);
   try {
     const newReview = await Review.create({
       ...req.body,
