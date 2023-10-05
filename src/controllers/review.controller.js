@@ -3,7 +3,11 @@ import AppError from "../utils/appError.js";
 
 export const getAllReviews = async (req, res, next) => {
   try {
-    const reviews = await Review.find();
+    let filter = {};
+
+    if (req.params.tourId) filter = { tour: req.params.tourId };
+
+    const reviews = await Review.find(filter);
 
     res.status(200).json({
       status: "success",
@@ -18,8 +22,17 @@ export const getAllReviews = async (req, res, next) => {
 };
 
 export const addReview = async (req, res, next) => {
+  const tourId = req?.params?.tourId;
+
+  console.log("req.user=>", req.user);
+
+  console.log("tour id=>", tourId);
   try {
-    const newReview = await Review.create({ ...req.body, user: req.user.id });
+    const newReview = await Review.create({
+      ...req.body,
+      user: req.user.id,
+      tour: tourId,
+    });
 
     res.status(201).json({
       status: "success",
@@ -28,9 +41,7 @@ export const addReview = async (req, res, next) => {
       },
     });
   } catch (err) {
-    return next(
-      new AppError("Something went wrong while creating review!!", 400)
-    );
+    next(err);
   }
 };
 

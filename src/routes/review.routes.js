@@ -2,7 +2,9 @@ import { Router } from "express";
 import * as reviewCtrl from "../controllers/review.controller.js";
 import * as authCtrl from "../controllers/auth.controller.js";
 
-const router = Router();
+const router = Router({ mergeParams: true });
+
+// Merge params helps us to get access to the tourId in the review routes
 
 router.post("/", authCtrl.requireAuth, reviewCtrl.addReview);
 

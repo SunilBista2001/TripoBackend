@@ -1,15 +1,8 @@
 import { Router } from "express";
-import * as authController from "../controllers/auth.controller.js";
+import * as userCtrl from "../controllers/user.controller.js";
 
 const router = Router();
 
-router.get("/", authController.requireAuth, (req, res) => {
-  res.json({
-    status: "success",
-    data: {
-      user: req.user,
-    },
-  });
-});
+router.get("/", userCtrl.getAllUsers);
 
 export default router;

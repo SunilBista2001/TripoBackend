@@ -8,7 +8,7 @@ const router = Router();
 
 router.use("/user", userRoutes);
 
-router.use("/tours", tourRoutes);
+router.use("/tour", tourRoutes);
 
 router.use("/reviews", reviewRoutes);
 
