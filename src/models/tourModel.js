@@ -54,7 +54,7 @@ const tourSchema = new mongoose.Schema(
   }
 );
 
-// Virtual properties are not stored in the database and helps to create a relationship between two models
+// Virtual properties are not stored in the database and helps to create a relationship between two models by child referencing
 tourSchema.virtual("reviews", {
   ref: "Review",
   foreignField: "tour",

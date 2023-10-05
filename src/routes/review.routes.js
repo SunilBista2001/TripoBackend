@@ -8,4 +8,8 @@ router.post("/", authCtrl.requireAuth, reviewCtrl.addReview);
 
 router.get("/", reviewCtrl.getAllReviews);
 
+router.patch("/:id", authCtrl.requireAuth, reviewCtrl.updateReview);
+
+router.delete("/:id", authCtrl.requireAuth, reviewCtrl.deleteReview);
+
 export default router;
