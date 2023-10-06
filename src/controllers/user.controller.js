@@ -12,3 +12,20 @@ export const getAllUsers = async (req, res) => {
     return next(new AppError("Error getting all users", 500));
   }
 };
+
+export const getUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id).select("-password -__v");
+
+    if (!user) {
+      return next(new AppError("User not found", 404));
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: { user },
+    });
+  } catch (err) {
+    return next(new AppError("Error getting user", 500));
+  }
+};

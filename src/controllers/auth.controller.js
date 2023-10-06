@@ -43,9 +43,6 @@ export const signIn = async (req, res, next) => {
     res.status(200).json({
       status: "success",
       token,
-      data: {
-        user,
-      },
     });
   } catch (error) {
     next(error);
@@ -100,4 +97,9 @@ export const authorizeTo = (role) => {
     }
     next();
   };
+};
+
+export const getMe = (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
 };
