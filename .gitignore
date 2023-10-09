@@ -9,3 +9,5 @@ build/
 
 # Ignore environment-specific files
 .env
+
+img/
