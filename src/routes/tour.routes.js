@@ -27,6 +27,8 @@ router.patch(
   "/:id",
   authCtrl.requireAuth,
   authCtrl.authorizeTo("admin"),
+  tourCtrl.uploadTourImages,
+  tourCtrl.resizeTourImages,
   tourCtrl.updateTourById
 );
 

@@ -33,18 +33,22 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
-export const resizeProfilePicture = (req, res, next) => {
+export const resizeProfilePicture = async (req, res, next) => {
   if (!req.file) {
     return next();
   }
 
-  req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
+  try {
+    req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
 
-  sharp(req.file.buffer)
-    .resize(500, 500)
-    .toFormat("jpeg")
-    .jpeg({ quality: 90 })
-    .toFile(`img/users/${req.file.filename}`);
+    await sharp(req.file.buffer)
+      .resize(500, 500)
+      .toFormat("jpeg")
+      .jpeg({ quality: 90 })
+      .toFile(`img/users/${req.file.filename}`);
+  } catch (error) {
+    next(new AppError("Failed to resize the image", 400));
+  }
 
   next();
 };
@@ -142,7 +146,7 @@ export const authorizeTo = (role) => {
 
 export const updateMe = async (req, res, next) => {
   try {
-    const filteredBody = filterObj(req.body, "name", "email");
+    const filteredBody = filterObj(req.body, "username", "email");
 
     if (req.file) {
       filteredBody.profilePicture = req.file.filename;
