@@ -5,6 +5,7 @@ import connectDB from "./src/configs/db.js";
 import routes from "./src/routes/index.js";
 import AppError from "./src/utils/appError.js";
 import { errorHandler } from "./src/middleware/error.middleware.js";
+import compression from "compression";
 
 const app = express();
 
@@ -13,6 +14,9 @@ app.use(morgan("dev"));
 
 // To parse the body of the request
 app.use(express.json());
+
+// To compress the response
+app.use(compression());
 
 // Connect to MongoDB
 connectDB
