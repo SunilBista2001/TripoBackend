@@ -5,14 +5,12 @@ import Tour from "../models/tourModel.js";
 
 export const getCollaborativeRecommendation = async (req, res, next) => {
   try {
-    // const userId = req.user.id;
-
     // Getting user
-    const user = await User.findById(req.params.id)
+    const user = await User.findById(req.user.id)
       .select("-password -__v")
       .populate("reviews");
 
-    console.log("user", user);
+    console.log(user.reviews.length);
 
     // if user has no reviews
     if (user.reviews.length === 0) {
@@ -39,14 +37,14 @@ export const getCollaborativeRecommendation = async (req, res, next) => {
       },
     }).distinct("user");
 
-    // Getting Tours id based on similar users
+    // Getting Tours id based on similar users who have reviewed another tour also
     const Tours = await Review.find({
       user: { $in: similarUsers },
     })
       .sort("-createdAt")
       .distinct("tour");
 
-    // Getting recommended tours
+    // Getting Tours details
     const recommendation = await Tour.find({
       _id: { $in: Tours },
     }).select("-__v");

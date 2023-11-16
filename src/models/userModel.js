@@ -69,7 +69,7 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-// Virtual Properties
+// Virtual Properties to get all reviews of a user while populating reviews
 userSchema.virtual("reviews", {
   ref: "Review",
   foreignField: "user",

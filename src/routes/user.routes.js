@@ -5,10 +5,15 @@ import * as algorithmCtrl from "../algorithm/index.js";
 
 const router = Router();
 
-router.get("/", userCtrl.getAllUsers);
+router.get("/users", userCtrl.getAllUsers);
 
 router.get("/:id", userCtrl.getUser);
 
-router.get("/recommendation/:id", algorithmCtrl.getCollaborativeRecommendation);
+// Getting collaborative recommendation
+router.get(
+  "/",
+  authCtrl.requireAuth,
+  algorithmCtrl.getCollaborativeRecommendation
+);
 
 export default router;
