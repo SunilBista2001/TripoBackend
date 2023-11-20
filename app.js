@@ -30,9 +30,9 @@ connectDB
 // To handle the routes
 app.use("/api/v1", routes);
 
-app.use("*", (req, res, next) => {
-  return next(new AppError("Route not found", 404));
-});
+// app.use("*", (req, res, next) => {
+//   return next(new AppError("Route not found", 404));
+// });
 
 // To listen on server
 app.listen(config.port, () => {
