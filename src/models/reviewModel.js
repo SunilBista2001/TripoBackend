@@ -49,15 +49,18 @@ reviewSchema.statics.calcAvgRating = async function (tourId) {
       $group: {
         _id: "$tour",
         nRating: { $sum: 1 },
-        avgRating: { $avg: "$rating" },
+        totalRating: { $sum: "$rating" },
       },
     },
   ]);
 
-  await Tour.findByIdAndUpdate(tourId, {
-    ratingsQuantity: stats[0].nRating,
-    ratingsAverage: stats[0].avgRating,
-  });
+  // Using Arthimetic mean to calculate the average rating
+  if (stats.length > 0) {
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingsQuantity: stats[0].nRating,
+      ratingsAverage: stats[0].totalRating / stats[0].nRating,
+    });
+  }
 };
 
 reviewSchema.post("save", function () {

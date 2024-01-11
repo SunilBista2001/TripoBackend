@@ -10,10 +10,16 @@ export const getCollaborativeRecommendation = async (req, res, next) => {
       .select("-password -__v")
       .populate("reviews");
 
-    console.log(user.reviews.length);
+    // Getting similar users id who have reviewed the same tours
+    const similarUsers = await Review.find({
+      tour: { $in: user.reviews.map((review) => review.tour) },
+      user: {
+        $ne: user._id, // exclude current user
+      },
+    }).distinct("user");
 
-    // if user has no reviews
-    if (user.reviews.length === 0) {
+    // if user has no reviews and no similar users
+    if (user.reviews.length === 0 || similarUsers.length === 0) {
       // Filtering out tours with ratingsAverage greater than or equals to 3
       const popularTours = await Tour.find({
         ratingsAverage: { $gte: 3 },
@@ -29,20 +35,14 @@ export const getCollaborativeRecommendation = async (req, res, next) => {
       });
     }
 
-    // Getting similar users id who have reviewed the same tours
-    const similarUsers = await Review.find({
-      tour: { $in: user.reviews.map((review) => review.tour) },
-      user: {
-        $ne: user._id, // exclude current user
-      },
-    }).distinct("user");
-
     // Getting Tours id based on similar users who have reviewed another tour also
     const Tours = await Review.find({
       user: { $in: similarUsers },
     })
       .sort("-createdAt")
       .distinct("tour");
+
+    console.log("tours", Tours);
 
     // Getting Tours details
     const recommendation = await Tour.find({

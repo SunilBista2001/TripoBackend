@@ -13,6 +13,8 @@ router.post(
   "/",
   authCtrl.requireAuth,
   authCtrl.authorizeTo("admin"),
+  tourCtrl.uploadTourImages,
+  tourCtrl.resizeTourImages,
   tourCtrl.createTour
 );
 
