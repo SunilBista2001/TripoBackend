@@ -11,8 +11,13 @@ const tourSchema = new mongoose.Schema(
       minlength: [8, "A tour name must have more or equal than 10 characters"],
     },
 
+    city: {
+      type: String,
+      required: [true, "A tour must have a city"],
+    },
     description: {
       type: String,
+      required: [true, "A tour must have a description"],
     },
 
     duration: {

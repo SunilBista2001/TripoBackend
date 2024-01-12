@@ -19,13 +19,14 @@ export const getCollaborativeRecommendation = async (req, res, next) => {
     }).distinct("user");
 
     // if user has no reviews and no similar users
-    if (user.reviews.length === 0 || similarUsers.length === 0) {
+    if (user.reviews.length === 0) {
       // Filtering out tours with ratingsAverage greater than or equals to 3
       const popularTours = await Tour.find({
         ratingsAverage: { $gte: 3 },
       })
         .sort("-ratingsAverage")
         .select("-__v");
+
       res.status(200).json({
         status: "success",
         results: popularTours.length,
