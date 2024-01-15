@@ -1,10 +1,11 @@
 import config from "../configs/config.js";
 
 const sendErrToDev = (err, res) => {
-  res.status(err.statusCode).json({
-    status: err.status,
-    message: err.message,
-    stack: err.stack,
+  res.status(err?.statusCode).json({
+    status: err?.status,
+    error: err,
+    message: err?.message,
+    stack: err?.stack,
   });
 };
 
@@ -15,7 +16,6 @@ const sendErrToProd = (err, res) => {
       message: err.message,
     });
   } else {
-    console.log("ERROR: ", err);
     res.status(500).json({
       status: "error",
       message: "Something went wrong!",
@@ -24,9 +24,8 @@ const sendErrToProd = (err, res) => {
 };
 
 export const errorHandler = (err, req, res, next) => {
-  console.log("error handler", err);
-
   if (config.node_env === "development") {
+    console.log(err);
     sendErrToDev(err, res);
   }
 

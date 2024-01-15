@@ -22,7 +22,7 @@ router.post(
 router.get("/", tourCtrl.getAllTours);
 
 // only logged in users can get a tour
-router.get("/:id", authCtrl.requireAuth, tourCtrl.getTourById);
+router.get("/:id", tourCtrl.getTourById);
 
 // only admin can update a tour
 router.patch(

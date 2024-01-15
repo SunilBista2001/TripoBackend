@@ -18,7 +18,6 @@ const whitelist = ["http://localhost:5173", "http://localhost:3000"];
 
 const corsOptions = {
   origin: function (origin, callback) {
-    console.log("origin is ", origin);
     if (!origin || whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
@@ -55,12 +54,12 @@ app.use("/api/v1", routes);
 //   return next(new AppError("Route not found", 404));
 // });
 
+// Global error handler
+app.use(errorHandler);
+
 // To listen on server
 app.listen(config.port, () => {
   console.log(`Server is running on port ${config.port}`);
 });
-
-// Global error handler
-app.use(errorHandler);
 
 export default app;

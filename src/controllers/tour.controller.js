@@ -27,7 +27,6 @@ export const resizeTourImages = async (req, res, next) => {
   if (!req.files.coverImage || !req.files.images) return next();
 
   // 1) Cover image
-
   req.body.coverImage = `tour-${req.params.id}-${Date.now()}.jpeg`;
 
   await sharp(req.files.coverImage[0].buffer)
@@ -37,7 +36,6 @@ export const resizeTourImages = async (req, res, next) => {
     .toFile(`img/tours/${req.body.coverImage}`);
 
   // 2) Images
-
   req.body.images = [];
 
   await Promise.all(
@@ -45,7 +43,7 @@ export const resizeTourImages = async (req, res, next) => {
       const filename = `tour-${req.params.id}-${Date.now()}-${i + 1}.jpeg`;
 
       await sharp(file.buffer)
-        .resize(2000, 1333)
+        .resize(1920, 1080)
         .toFormat("jpeg")
         .jpeg({ quality: 90 })
         .toFile(`img/tours/${filename}`);

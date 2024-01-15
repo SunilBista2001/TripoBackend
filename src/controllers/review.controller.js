@@ -60,9 +60,7 @@ export const updateReview = async (req, res, next) => {
       },
     });
   } catch (err) {
-    return next(
-      new AppError("Something went wrong while updating review!!", 400)
-    );
+    next(err);
   }
 };
 
@@ -75,6 +73,6 @@ export const deleteReview = async (req, res, next) => {
       data: null,
     });
   } catch (error) {
-    return next(new AppError("No review found with that ID", 404));
+    next(error);
   }
 };
