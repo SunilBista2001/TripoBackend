@@ -25,6 +25,13 @@ export const addReview = async (req, res, next) => {
   const tourId = req?.params?.tourId;
 
   try {
+    const review = await Review.findOne({ tour: tourId, user: req.user.id });
+
+    // if user has already review on this tour, don't create a review
+    if (review) {
+      return next(new AppError("You already reviewed this tour", 400));
+    }
+
     const newReview = await Review.create({
       ...req.body,
       user: req.user.id,

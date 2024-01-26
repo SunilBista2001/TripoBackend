@@ -76,6 +76,7 @@ reviewSchema.post("save", function () {
 });
 
 // findByIdAndUpdate
+// findByIdAndDelete
 reviewSchema.pre(/^findOneAnd/, async function (next) {
   this.r = await this.findOne();
 

@@ -1,6 +1,5 @@
 import User from "../models/userModel.js";
 import Review from "../models/reviewModel.js";
-import AppError from "../utils/appError.js";
 import Tour from "../models/tourModel.js";
 
 export const getCollaborativeRecommendation = async (req, res, next) => {
@@ -10,6 +9,19 @@ export const getCollaborativeRecommendation = async (req, res, next) => {
       .select("-password -__v")
       .populate("reviews");
 
+    // if user has no reviews
+    if (user.reviews.length === 0) {
+      const tours = await Tour.find({
+        ratingsAverage: { $gte: 3 },
+      }).select("-__v");
+
+      return res.status(200).json({
+        status: "success",
+        results: tours.length,
+        data: tours,
+      });
+    }
+
     // Getting similar users id who have reviewed the same tours
     const similarUsers = await Review.find({
       tour: { $in: user.reviews.map((review) => review.tour) },
@@ -18,24 +30,6 @@ export const getCollaborativeRecommendation = async (req, res, next) => {
       },
     }).distinct("user");
 
-    // if user has no reviews and no similar users
-    if (user.reviews.length === 0) {
-      // Filtering out tours with ratingsAverage greater than or equals to 3
-      const popularTours = await Tour.find({
-        ratingsAverage: { $gte: 3 },
-      })
-        .sort("-ratingsAverage")
-        .select("-__v");
-
-      res.status(200).json({
-        status: "success",
-        results: popularTours.length,
-        data: {
-          recommendation: popularTours,
-        },
-      });
-    }
-
     // Getting Tours id based on similar users who have reviewed another tour also
     const Tours = await Review.find({
       user: { $in: similarUsers },
@@ -43,7 +37,11 @@ export const getCollaborativeRecommendation = async (req, res, next) => {
       .sort("-createdAt")
       .distinct("tour");
 
-    console.log("tours", Tours);
+    const toursName = await Tour.find({
+      _id: { $in: Tours },
+    }).select("-__v");
+
+    console.log("tours =>", toursName);
 
     // Getting Tours details
     const recommendation = await Tour.find({
@@ -58,6 +56,6 @@ export const getCollaborativeRecommendation = async (req, res, next) => {
       },
     });
   } catch (error) {
-    return next(new AppError("Error getting recommendation", 500));
+    return next(error);
   }
 };
