@@ -13,12 +13,14 @@ export const getCollaborativeRecommendation = async (req, res, next) => {
     if (user.reviews.length === 0) {
       const tours = await Tour.find({
         ratingsAverage: { $gte: 3 },
-      }).select("-__v");
+      }).sort("-ratingsAverage");
 
       return res.status(200).json({
         status: "success",
         results: tours.length,
-        data: tours,
+        data: {
+          recommendation: tours,
+        },
       });
     }
 
@@ -36,12 +38,6 @@ export const getCollaborativeRecommendation = async (req, res, next) => {
     })
       .sort("-createdAt")
       .distinct("tour");
-
-    const toursName = await Tour.find({
-      _id: { $in: Tours },
-    }).select("-__v");
-
-    console.log("tours =>", toursName);
 
     // Getting Tours details
     const recommendation = await Tour.find({
